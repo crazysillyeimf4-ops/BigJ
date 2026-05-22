@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JOSH.GG — The Big Man Plays</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0e0c0a;
+      --bg2: #181410;
+      --card: #1e1a15;
+      --accent: #f5a623;
+      --accent2: #e8390e;
+      --green: #39e87a;
+      --text: #f0ead8;
+      --muted: #7a6e5c;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 18px;
+      overflow-x: hidden;
+      cursor: default;
+    }
+
+    /* NOISE OVERLAY */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.4;
+    }
+
+    /* NAV */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 40px;
+      background: rgba(14,12,10,0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 2px solid var(--accent);
+    }
+
+    .logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.2rem;
+      letter-spacing: 3px;
+      color: var(--accent);
+      text-shadow: 0 0 24px rgba(245,166,35,0.4);
+    }
+
+    .logo span { color: var(--accent2); }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 32px;
+    }
+
+    nav ul a {
+      text-decoration: none;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    nav ul a:hover { color: var(--accent); }
+
+    /* HERO */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 60px 40px;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background: 
+        radial-gradient(ellipse 80% 60% at 60% 50%, rgba(232,57,14,0.12) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 80% at 20% 80%, rgba(245,166,35,0.08) 0%, transparent 60%),
+        var(--bg);
+    }
+
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(245,166,35,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(245,166,35,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 900px;
+      text-align: center;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      background: var(--accent2);
+      color: #fff;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      padding: 4px 14px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      animation: fadeDown 0.6s ease both;
+    }
+
+    .hero h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(5rem, 16vw, 13rem);
+      line-height: 0.88;
+      letter-spacing: -2px;
+      color: var(--text);
+      animation: fadeDown 0.7s 0.1s ease both;
+    }
+
+    .hero h1 .outline {
+      -webkit-text-stroke: 2px var(--accent);
+      color: transparent;
+    }
+
+    .hero-sub {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 16px;
+      animation: fadeDown 0.7s 0.2s ease both;
+    }
+
+    .hero-sub em {
+      color: var(--accent);
+      font-style: normal;
+    }
+
+    .hero-avatar {
+      margin: 40px auto 0;
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      border: 4px solid var(--accent);
+      box-shadow: 0 0 0 8px rgba(245,166,35,0.12), 0 0 60px rgba(245,166,35,0.2);
+      overflow: hidden;
+      animation: popIn 0.6s 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+      background: var(--card);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 5rem;
+    }
+
+    .scroll-hint {
+      margin-top: 60px;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 4px;
+      color: var(--muted);
+      text-transform: uppercase;
+      animation: bounce 2s infinite 1s;
+    }
+
+    /* STATS BAR */
+    .stats-bar {
+      background: var(--accent);
+      padding: 16px 40px;
+      display: flex;
+      gap: 0;
+      overflow: hidden;
+    }
+
+    .stats-bar-inner {
+      display: flex;
+      gap: 64px;
+      animation: marquee 18s linear infinite;
+      white-space: nowrap;
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.3rem;
+      letter-spacing: 2px;
+      color: var(--bg);
+    }
+
+    .stat-item .num {
+      font-size: 1.8rem;
+      color: var(--accent2);
+    }
+
+    /* ABOUT */
+    .about {
+      padding: 100px 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .section-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 5px;
+      color: var(--accent2);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .about h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 4.5rem;
+      line-height: 1;
+      letter-spacing: 1px;
+      margin-bottom: 24px;
+    }
+
+    .about p {
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 1.1rem;
+      font-weight: 400;
+      margin-bottom: 16px;
+    }
+
+    .about p strong { color: var(--text); font-weight: 700; }
+
+    .about-card {
+      background: var(--card);
+      border: 1px solid rgba(245,166,35,0.15);
+      padding: 40px;
+      position: relative;
+    }
+
+    .about-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 4px; height: 100%;
+      background: var(--accent);
+    }
+
+    .big-emoji {
+      font-size: 7rem;
+      line-height: 1;
+      display: block;
+      margin-bottom: 16px;
+      filter: drop-shadow(0 8px 24px rgba(245,166,35,0.3));
+    }
+
+    .about-card h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.5rem;
+      color: var(--accent);
+      letter-spacing: 1px;
+    }
+
+    .about-card p {
+      color: var(--muted);
+      font-size: 1rem;
+      margin-top: 8px;
+    }
+
+    /* GAMES SECTION */
+    .games {
+      background: var(--bg2);
+      padding: 100px 40px;
+      border-top: 1px solid rgba(245,166,35,0.1);
+      border-bottom: 1px solid rgba(245,166,35,0.1);
+    }
+
+    .games-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 60px;
+    }
+
+    .section-header h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 4.5rem;
+      letter-spacing: 1px;
+      line-height: 1;
+    }
+
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+
+    .game-card {
+      background: var(--card);
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s, background 0.2s;
+      cursor: pointer;
+    }
+
+    .game-card:hover {
+      background: #252016;
+      transform: translateY(-4px);
+    }
+
+    .game-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 0; height: 3px;
+      background: var(--accent);
+      transition: width 0.3s ease;
+    }
+
+    .game-card:hover::after { width: 100%; }
+
+    .game-icon {
+      font-size: 3rem;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .game-card h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      letter-spacing: 1px;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .game-card .genre {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 3px;
+      color: var(--accent2);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .game-card p {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .rating {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 16px;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--accent);
+    }
+
+    /* HIGHLIGHTS */
+    .highlights {
+      padding: 100px 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .highlights h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 4.5rem;
+      letter-spacing: 1px;
+      margin-bottom: 60px;
+    }
+
+    .highlight-list {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .highlight-item {
+      display: grid;
+      grid-template-columns: 80px 1fr auto;
+      align-items: center;
+      gap: 32px;
+      padding: 24px 32px;
+      background: var(--card);
+      border-left: 0px solid var(--accent);
+      transition: border-left-width 0.2s, background 0.2s;
+      cursor: default;
+    }
+
+    .highlight-item:hover {
+      border-left-width: 6px;
+      background: #1e1a15;
+    }
+
+    .highlight-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3rem;
+      color: rgba(245,166,35,0.2);
+      line-height: 1;
+    }
+
+    .highlight-text h4 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem;
+      letter-spacing: 1px;
+      color: var(--text);
+    }
+
+    .highlight-text p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-top: 4px;
+    }
+
+    .highlight-badge {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+      padding: 4px 12px;
+      border: 1px solid var(--green);
+      color: var(--green);
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    /* QUOTE */
+    .quote-section {
+      background: var(--accent2);
+      padding: 80px 40px;
+      text-align: center;
+    }
+
+    .quote-section blockquote {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      letter-spacing: 1px;
+      color: #fff;
+      max-width: 900px;
+      margin: 0 auto;
+      line-height: 1.1;
+    }
+
+    .quote-section cite {
+      display: block;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 4px;
+      color: rgba(255,255,255,0.6);
+      text-transform: uppercase;
+      margin-top: 24px;
+      font-style: normal;
+    }
+
+    /* FOOTER */
+    footer {
+      background: #080706;
+      border-top: 2px solid var(--accent);
+      padding: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    footer .logo { font-size: 1.6rem; }
+
+    footer p {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 2px;
+    }
+
+    .online-dot {
+      display: inline-block;
+      width: 8px; height: 8px;
+      background: var(--green);
+      border-radius: 50%;
+      margin-right: 8px;
+      box-shadow: 0 0 8px var(--green);
+      animation: pulse 2s infinite;
+    }
+
+    /* ANIMATIONS */
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.5); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); opacity: 0.5; }
+      50% { transform: translateY(8px); opacity: 1; }
+    }
+
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    @media (max-width: 768px) {
+      nav ul { display: none; }
+      .about { grid-template-columns: 1fr; gap: 40px; }
+      .games-grid { grid-template-columns: 1fr; }
+      .section-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .highlight-item { grid-template-columns: 50px 1fr; }
+      .highlight-badge { display: none; }
+      footer { flex-direction: column; gap: 16px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="logo">JOSH<span>.GG</span></div>
+    <ul>
+      <li><a href="#about">About</a></li>
+      <li><a href="#games">Games</a></li>
+      <li><a href="#highlights">Highlights</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-content">
+      <div class="hero-tag">🎮 Est. When He First Picked Up a Controller</div>
+      <h1>THE <span class="outline">BIG</span><br>GAMER</h1>
+      <div class="hero-avatar">🕹️</div>
+      <p class="hero-sub">His name is <em>Josh</em>. He's big. He games hard.</p>
+      <p class="scroll-hint">↓ scroll to witness ↓</p>
+    </div>
+  </section>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar">
+    <div class="stats-bar-inner">
+      <div class="stat-item"><span class="num">10K+</span> Hours Logged</div>
+      <div class="stat-item"><span class="num">∞</span> Snacks Consumed</div>
+      <div class="stat-item"><span class="num">#1</span> On the Couch</div>
+      <div class="stat-item"><span class="num">420</span> Games Owned</div>
+      <div class="stat-item"><span class="num">0</span> Skill Issues</div>
+      <!-- Duplicate for seamless loop -->
+      <div class="stat-item"><span class="num">10K+</span> Hours Logged</div>
+      <div class="stat-item"><span class="num">∞</span> Snacks Consumed</div>
+      <div class="stat-item"><span class="num">#1</span> On the Couch</div>
+      <div class="stat-item"><span class="num">420</span> Games Owned</div>
+      <div class="stat-item"><span class="num">0</span> Skill Issues</div>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <section class="about" id="about">
+    <div>
+      <p class="section-label">// Who is this guy</p>
+      <h2>Meet<br>Josh.</h2>
+      <p>Josh is a <strong>big dude who loves games</strong>. Not just any games — all games. Fighting games, RPGs, survival horror, mobile trash he won't admit to. If it has a health bar, Josh is there.</p>
+      <p>He weighs more than your gaming PC and has faster reaction time than most people half his size. <strong>Don't let the size fool you.</strong></p>
+      <p>When Josh isn't gaming, he's <strong>thinking about gaming</strong>. When he's eating, he's gaming. When he's sleeping, he's probably dreaming about loot drops.</p>
+    </div>
+    <div class="about-card">
+      <span class="big-emoji">🧔‍♂️</span>
+      <h3>Josh "BigJ" Gamer</h3>
+      <p>Professional couch occupier · Snack archaeologist · Has opinions about controller grip that you didn't ask for</p>
+    </div>
+  </section>
+
+  <!-- GAMES -->
+  <section class="games" id="games">
+    <div class="games-inner">
+      <div class="section-header">
+        <div>
+          <p class="section-label">// Currently in rotation</p>
+          <h2>Josh's Picks</h2>
+        </div>
+      </div>
+      <div class="games-grid">
+
+        <div class="game-card">
+          <span class="game-icon">⚔️</span>
+          <h3>Elden Ring</h3>
+          <p class="genre">Action RPG</p>
+          <p>Josh has died 847 times but insists he's "learning the patterns." He has never learned the patterns.</p>
+          <div class="rating">★★★★★ &nbsp;— Josh's Pick</div>
+        </div>
+
+        <div class="game-card">
+          <span class="game-icon">🔫</span>
+          <h3>Call of Duty</h3>
+          <p class="genre">FPS</p>
+          <p>His K/D ratio is classified. His trash talk, however, is fully public and devastating.</p>
+          <div class="rating">★★★★☆ &nbsp;— Big Fan</div>
+        </div>
+
+        <div class="game-card">
+          <span class="game-icon">🧟</span>
+          <h3>Resident Evil</h3>
+          <p class="genre">Survival Horror</p>
+          <p>Screams louder than the game's audio. Neighbors have called to check in. He's fine. It's fine.</p>
+          <div class="rating">★★★★★ &nbsp;— Terrified Daily</div>
+        </div>
+
+        <div class="game-card">
+          <span class="game-icon">🏎️</span>
+          <h3>Forza Horizon</h3>
+          <p class="genre">Racing</p>
+          <p>Drives exactly how you'd expect Josh to drive. Fast, wide, and taking up both lanes.</p>
+          <div class="rating">★★★★☆ &nbsp;— Vroom Vroom</div>
+        </div>
+
+        <div class="game-card">
+          <span class="game-icon">🎲</span>
+          <h3>Baldur's Gate 3</h3>
+          <p class="genre">CRPG</p>
+          <p>500 hours in, still hasn't finished Act 1. He keeps rerolling characters. It's a medical condition.</p>
+          <div class="rating">★★★★★ &nbsp;— Send Help</div>
+        </div>
+
+        <div class="game-card">
+          <span class="game-icon">🥊</span>
+          <h3>Mortal Kombat</h3>
+          <p class="genre">Fighting</p>
+          <p>Mashes buttons with the confidence of someone who absolutely knows what they're doing. (He doesn't.)</p>
+          <div class="rating">★★★☆☆ &nbsp;— Button Masher</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- HIGHLIGHTS -->
+  <section class="highlights" id="highlights">
+    <p class="section-label">// Greatest moments</p>
+    <h2>Legendary<br>Moments</h2>
+    <div class="highlight-list">
+
+      <div class="highlight-item">
+        <div class="highlight-num">01</div>
+        <div class="highlight-text">
+          <h4>The 14-Hour Elden Ring Session</h4>
+          <p>Didn't eat. Didn't sleep. Defeated Malenia on attempt 312. Cried real tears.</p>
+        </div>
+        <div class="highlight-badge">✓ Verified</div>
+      </div>
+
+      <div class="highlight-item">
+        <div class="highlight-num">02</div>
+        <div class="highlight-text">
+          <h4>The Controller Throw Heard Around the Block</h4>
+          <p>Lost a 1v1 in CoD. The controller survived. The wall did not. Josh has since upgraded to a gripped controller.</p>
+        </div>
+        <div class="highlight-badge">🔥 Legendary</div>
+      </div>
+
+      <div class="highlight-item">
+        <div class="highlight-num">03</div>
+        <div class="highlight-text">
+          <h4>Perfect Game on the Snack Run</h4>
+          <p>Returned from the kitchen with chips, dip, a drink, and a hot pocket — without pausing the game.</p>
+        </div>
+        <div class="highlight-badge">🏆 GOAT</div>
+      </div>
+
+      <div class="highlight-item">
+        <div class="highlight-num">04</div>
+        <div class="highlight-text">
+          <h4>The Steam Sale Haul of the Decade</h4>
+          <p>Bought 47 games during the Summer Sale. Has played 2 of them. No regrets.</p>
+        </div>
+        <div class="highlight-badge">💸 Historic</div>
+      </div>
+
+      <div class="highlight-item">
+        <div class="highlight-num">05</div>
+        <div class="highlight-text">
+          <h4>Carried the Squad in Warzone (Once)</h4>
+          <p>The squad won't let him forget it. Neither will Josh. He has screenshots. He will show you.</p>
+        </div>
+        <div class="highlight-badge">⭐ Elite</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- QUOTE -->
+  <div class="quote-section">
+    <blockquote>"Git Gud? I AM Gud. You Just Can't See It Yet."</blockquote>
+    <cite>— Josh, every single time</cite>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="logo">JOSH<span>.GG</span></div>
+    <p><span class="online-dot"></span>Josh is currently online — and not coming to the door.</p>
+    <p>© 2026 Josh Gaming Industries</p>
+  </footer>
+
+</body>
+</html>
